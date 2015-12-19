@@ -5,7 +5,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.robotcore.util.Range;
 
 public class BasicOpMode extends OpMode {
 
@@ -26,32 +25,19 @@ public class BasicOpMode extends OpMode {
         arm2 = hardwareMap.dcMotor.get("6");
         Lservo = hardwareMap.servo.get("s1");
         Rservo = hardwareMap.servo.get("s2");
-
         one = new Controller(gamepad1);
-        
+
     }
 
     public void loop() {
         one.update(gamepad1);
 
+        double lservovalue;
+        double rservovalue;
         double left;
         double right;
-        double slow;
         double tape;
         float winch;
-        double Lservo_pos;
-        double Rservo_pos;
-
-        left = one.left_stick_y;
-        right = one.right_stick_y;
-
-        Tank.motor4(frontLeft, frontRight, backLeft, backRight, one.left_stick_y, one.right_stick_y);
-
-
-        //--------------------------------SLOW
-        if (gamepad1.left_bumper)  {
-            slow =  1.0;
-        }else slow = 0.3;
 
         //--------------------------------ARM
         if (gamepad2.left_trigger == 1) tape = 0.2;
@@ -63,31 +49,23 @@ public class BasicOpMode extends OpMode {
         else winch = 0;
 
         //--------------------------------SERVOS
-        if (gamepad2.x) Lservo_pos = 0;
-        else Lservo_pos = 1;
+        if (one.b == 1) lservovalue = 0;
+        else lservovalue = 1;
 
-        if (gamepad2.b) Rservo_pos = 0;
-        else Rservo_pos = 1;
+        if (one.x == 1) rservovalue = 0;
+        else rservovalue = 1;
 
         //--------------------------------DIRECTION
-        if (gamepad1.x) reverse = -reverse;
-        if (reverse < 0){
-            frontRight.setPower(-left);
-            frontLeft.setPower(-right);
-            backLeft.setPower(-right);
-            backRight.setPower(-left);
-        } else {
-            frontRight.setPower(right);
-            frontLeft.setPower(left);
-            backLeft.setPower(left);
-            backRight.setPower(right);
-        }
+        if (one.a == 1) reverse = -reverse;
+        left = one.left_stick_y;
+        right = one.right_stick_y;
 
+        Tank.motor4(frontLeft, frontRight, backLeft, backRight, -left, right);
 
         arm2.setPower(tape);
         arm1.setPower(winch);
-        Lservo.setPosition(Lservo_pos);
-        Rservo.setPosition(Rservo_pos);
+        Lservo.setPosition(lservovalue);
+        Rservo.setPosition(rservovalue );
 
     }
 
