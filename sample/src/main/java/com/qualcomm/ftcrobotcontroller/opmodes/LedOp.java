@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.hardware.LED;
 
 
 /*
-This class controls an external LED */
+This class controls an external LED (light.enable) as well as internal one (cdim.setLED)*/
 public class LedOp extends OpMode {
 
     DeviceInterfaceModule cdim;
