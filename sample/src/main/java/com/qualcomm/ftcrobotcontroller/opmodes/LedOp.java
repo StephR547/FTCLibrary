@@ -37,12 +37,12 @@ import com.qualcomm.robotcore.hardware.LED;
 
 
 /*
-Just a copy of nullOp to test.
- */
-public class dumpOp extends OpMode {
+This class controls an external LED */
+public class LedOp extends OpMode {
 
     DeviceInterfaceModule cdim;
-    LED light;
+    LED light; //
+    boolean state;
 
 
 
@@ -55,5 +55,8 @@ public class dumpOp extends OpMode {
     @Override
     public void loop() {
         light.enable(true);
+        state = cdim.getLEDState(0);
+        cdim.setLED(0,true);
+        telemetry.addData("state", state);
     }
 }

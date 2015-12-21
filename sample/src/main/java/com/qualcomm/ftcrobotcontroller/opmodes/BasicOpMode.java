@@ -39,18 +39,15 @@ public class BasicOpMode extends OpMode {
     public void init() {
         //DO NOT MOVE ROBOT DURING INIT OR GYRO WONT CALIBRATE
         G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
-        G.calibrate();
-        //assign variables to hardware from config
-        frontLeft = hardwareMap.dcMotor.get("4");
-        frontRight = hardwareMap.dcMotor.get("2");
-        backLeft = hardwareMap.dcMotor.get("3");
-        backRight = hardwareMap.dcMotor.get("1");
-        arm1 = hardwareMap.dcMotor.get("5");
-        arm2 = hardwareMap.dcMotor.get("6");
-        Lservo = hardwareMap.servo.get("s2"); // channel 6
-        Rservo = hardwareMap.servo.get("s1"); // channel 1
-
-        cdim = hardwareMap.deviceInterfaceModule.get("dim");
+        frontLeft   = hardwareMap.dcMotor.get("4");
+        frontRight  = hardwareMap.dcMotor.get("2");
+        backLeft    = hardwareMap.dcMotor.get("3");
+        backRight   = hardwareMap.dcMotor.get("1");
+        arm1        = hardwareMap.dcMotor.get("5");
+        arm2        = hardwareMap.dcMotor.get("6");
+        Lservo      = hardwareMap.servo.get("s2");
+        Rservo      = hardwareMap.servo.get("s1");
+        cdim        = hardwareMap.deviceInterfaceModule.get("dim");
         light = new LED(cdim, 0);
 
         one = new Controller(gamepad1);
@@ -60,10 +57,18 @@ public class BasicOpMode extends OpMode {
         //right servo down position = 0
         Lservopos = 0;
         Rservopos = 1;
+
+        //calibrate Gyro. Light will turn on while calibrating (untested)
+        G.calibrate();
+        while (G.isCalibrating()){
+            light.enable(true);
+        }
+        light.enable(false);
+
     }
     @Override
     public void loop() {
-        //gamepads MUST be updated every loop with FTClib.
+        //gamepads MUST be updated every loop with FTCLib.
         one.update(gamepad1);
         two.update(gamepad2);
 
@@ -114,7 +119,7 @@ public class BasicOpMode extends OpMode {
         if (one.back == ButtonState.RELEASED) G.calibrate();
 
         //--------------------------------DRIVE
-        //uses FTClib Tank class. Thanks LASA!
+        //uses FTCLib Tank class. Thanks LASA!
         Tank.motor4(frontLeft, frontRight, backLeft, backRight, -left, right);
 
         //set arm motor power

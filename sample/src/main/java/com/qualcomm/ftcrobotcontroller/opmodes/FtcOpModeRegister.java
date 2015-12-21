@@ -61,7 +61,7 @@ public void register(OpModeManager manager) {
     manager.register("Auton", Auton.class);
     manager.register("MRGyroExample", MRGyroExample.class);
     //manager.register("GyroAuton", GyroAuton.class);
-    manager.register("DumpOp", dumpOp.class);
+    manager.register("DumpOp", LedOp.class);
 
 }
 }
