@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.FTCLib;
 
 import com.lasarobotics.library.util.Log;
 import com.lasarobotics.library.util.Timers;

@@ -31,32 +31,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.LED;
-
-
 /*
-This class controls an external LED (light.enable) as well as internal one (cdim.setLED)*/
+This class controls an external LED (light.enable)
+as well as internal one (cdim.setLED)*/
 public class LedOp extends OpMode {
 
     DeviceInterfaceModule cdim;
-    LED light; //
-    boolean state;
+    double heading;
 
+    ModernRoboticsI2cGyro G;
 
-
-    @Override
-    public void init() {
+    @Override public void init() {
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
-        light = new LED(cdim, 0);
+        G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        G.calibrate();
     }
 
-    @Override
-    public void loop() {
-        light.enable(true);
-        state = cdim.getLEDState(0);
-        cdim.setLED(0,true);
-        telemetry.addData("state", state);
+    @Override public void loop() {
+        heading = G.getIntegratedZValue();
+        telemetry.addData("Heading", heading);
+
+        if (heading >= 0) cdim.setLED(0,true); else cdim.setLED(0,false);
+        if (heading <= 0) cdim.setLED(1,true); else cdim.setLED(1,false);
+
     }
 }

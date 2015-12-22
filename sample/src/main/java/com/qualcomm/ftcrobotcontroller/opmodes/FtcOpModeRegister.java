@@ -56,12 +56,9 @@ public void register(OpModeManager manager) {
      */
 
     manager.register("NullOp", NullOp.class);
-    manager.register("BasicOpMode", BasicOpMode.class);
-    //manager.register("ServoCode", ServoCode.class);
+    manager.register("Teleop", TeleOp.class);
     manager.register("Auton", Auton.class);
-    manager.register("MRGyroExample", MRGyroExample.class);
-    //manager.register("GyroAuton", GyroAuton.class);
-    manager.register("DumpOp", LedOp.class);
+    // manager.register("MRGyroExample", MRGyroExample.class);
 
-}
-}
+
+}}
