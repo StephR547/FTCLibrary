@@ -26,7 +26,6 @@ public class RobotSetup {
     private Telemetry telemetry;
 
     RobotSetup(HardwareMap hardwareMap, Telemetry _telemetry) {
-        try{
             G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
             cdim        = hardwareMap.deviceInterfaceModule.get("dim");
             frontLeft   = hardwareMap.dcMotor.get("4");
@@ -37,9 +36,6 @@ public class RobotSetup {
             arm2        = hardwareMap.dcMotor.get("6");
             Lservo      = hardwareMap.servo.get("s2");
             Rservo      = hardwareMap.servo.get("s1");
-        }catch (Exception p_exception){
-            DbgLog.msg(p_exception.getLocalizedMessage());
-        }
         telemetry   = _telemetry; //No idea what this does, ask suitbots?
 
         //left  servo down position = 1
