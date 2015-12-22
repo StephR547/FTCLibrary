@@ -8,6 +8,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class linearAuton extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
-
+        RobotSetup bot = new RobotSetup(hardwareMap,telemetry);
+        bot.gyroInit();
+        waitForStart();
+        bot.reverseVal = false;
+        while (bot.G.getIntegratedZValue() > -60){
+            bot.move(0,.1);
+            bot.redLED(true);
+        }
+        bot.redLED(false);
+        bot.move(0,0);
     }
 }

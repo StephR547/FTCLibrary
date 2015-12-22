@@ -2,22 +2,21 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
     import com.lasarobotics.library.controller.ButtonState;
     import com.lasarobotics.library.controller.Controller;
-    import com.lasarobotics.library.drive.Tank;
     import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-    import com.qualcomm.robotcore.hardware.LED;
-    import com.qualcomm.robotcore.robocol.Telemetry;
 
 public class TeleOp extends OpMode {
 
     //--------------------------------CONTROLLER SETUP
     Controller  one = new Controller(gamepad1),
                 two = new Controller(gamepad2);
+    RobotSetup bot;
 
-    RobotSetup bot = new RobotSetup(hardwareMap, telemetry);
     @Override public void init(){
+        bot = new RobotSetup(hardwareMap, telemetry);
         bot.gyroInit();
     }
     @Override public void loop() {
+        bot.redLED(true);
         //gamepads MUST be updated every loop with FTCLib.
         one.update(gamepad1);
         two.update(gamepad2);
@@ -40,14 +39,15 @@ public class TeleOp extends OpMode {
         //servo is pulled down by pressing a button, and goes back up when released.
         if (two.x == ButtonState.HELD) bot.servoL(1);
         else bot.servoL(0);
-        if (two.b == ButtonState.HELD) bot.servoL(0);
-        else bot.servoL(0);
+        if (two.b == ButtonState.HELD) bot.servoR(0);
+        else bot.servoR(0);
 
         //--------------------------------DIRECTION
         //This reverses our robot, so what was once our back is now our front.
+        //call reverse() to switch directions, and check reverseVal for current state.
         if (one.x == ButtonState.RELEASED) bot.reverse();
 
-        if (bot.reverse()) {
+        if (bot.reverseVal) {
             bot.move (one.left_stick_y, one.right_stick_y);
         } else {
             bot.move(one.right_stick_y, -one.left_stick_y);

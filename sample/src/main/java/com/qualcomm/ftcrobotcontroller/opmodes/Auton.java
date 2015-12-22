@@ -13,7 +13,12 @@ public class Auton extends OpMode{
     @Override public void loop() {
 
 
-    /*  TRAVIS OLD CODElong currentTime = System.currentTimeMillis();
+    }
+    @Override public void stop() {
+    }
+}
+
+/*  TRAVIS OLD CODElong currentTime = System.currentTimeMillis();
         long deltaTime   = currentTime - startTime;
 
         if (deltaTime < 2000) {
@@ -29,7 +34,4 @@ public class Auton extends OpMode{
         //send data to fones
         heading = G.getIntegratedZValue();
         telemetry.addData("direction", reverse);
-        telemetry.addData("Heading", heading);    */}
-    @Override public void stop() {
-    }
-}
+        telemetry.addData("Heading", heading);    */
