@@ -35,6 +35,7 @@ public class OptionsSample extends OpMode {
 
     @Override
     public void loop() {
+
         //Loops through each category, getting the input from menu
         for (Category c : menu.getCategories())
             telemetry.addData(c.getName(), menu.selectedOption(c.getName()));

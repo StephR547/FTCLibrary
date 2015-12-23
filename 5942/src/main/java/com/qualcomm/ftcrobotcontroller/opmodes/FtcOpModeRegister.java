@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.FTCLib.OptionsSample;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -46,21 +47,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     * @param manager op mode manager
     */
 public void register(OpModeManager manager) {
-
-    /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
-     *
-     * If two or more op modes are registered with the same name, the app will display an error.
-     */
-
-    manager.register("NullOp", NullOp.class);
-    manager.register("Teleop", TeleOp.class);
-    manager.register("Auton", Auton.class);
+    manager.register("NullOp",      NullOp.class);
+    manager.register("Teleop",      TeleOp.class);
+    manager.register("Auton",       Auton.class);
     manager.register("linearAuton", linearAuton.class);
-
-    // manager.register("MRGyroExample", MRGyroExample.class);
-
-
+    manager.register("options",     OptionsSample.class);
 }}
