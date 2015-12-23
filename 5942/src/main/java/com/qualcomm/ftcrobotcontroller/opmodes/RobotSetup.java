@@ -1,6 +1,8 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.lasarobotics.library.drive.Tank;
+import com.lasarobotics.library.options.OptionMenu;
+import com.lasarobotics.library.options.SingleSelectCategory;
 import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
@@ -11,12 +13,17 @@ import com.qualcomm.robotcore.robocol.Telemetry;
 
 public class RobotSetup {
 
+    //We want these to be private because we never directly tell them what to do.
+    //for control, we use move(), moveWinch(), etc. and not (arm1 = 1.0)
+    //Gyro is public because sometimes I call bot.G.calibrate().
+    //Could be made private once we have functions for every gyro use.
+    //similarly, menu is public because we call bot.menu.show()
     private DcMotor frontLeft, frontRight, backLeft, backRight, arm1, arm2;
     private Servo Lservo, Rservo;
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
     private LED extLED;
-
+    public OptionMenu allianceMenu;
     //declare Reverse Variable
     boolean reverseVal = false;
 
@@ -26,18 +33,25 @@ public class RobotSetup {
     private Telemetry telemetry;
 
     RobotSetup(HardwareMap hardwareMap, Telemetry _telemetry) {
-            G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
-            cdim        = hardwareMap.deviceInterfaceModule.get("dim");
-            //extLED      = hardwareMap.led.get("LED");
-            frontLeft   = hardwareMap.dcMotor.get("4");
-            frontRight  = hardwareMap.dcMotor.get("2");
-            backLeft    = hardwareMap.dcMotor.get("3");
-            backRight   = hardwareMap.dcMotor.get("1");
-            arm1        = hardwareMap.dcMotor.get("5");
-            arm2        = hardwareMap.dcMotor.get("6");
-            Lservo      = hardwareMap.servo.get("s2");
-            Rservo      = hardwareMap.servo.get("s1");
-            telemetry   = _telemetry; //No idea what this does, ask suitbots?
+        G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        cdim        = hardwareMap.deviceInterfaceModule.get("dim");
+        //extLED      = hardwareMap.led.get("LED");
+        frontLeft   = hardwareMap.dcMotor.get("4");
+        frontRight  = hardwareMap.dcMotor.get("2");
+        backLeft    = hardwareMap.dcMotor.get("3");
+        backRight   = hardwareMap.dcMotor.get("1");
+        arm1        = hardwareMap.dcMotor.get("5");
+        arm2        = hardwareMap.dcMotor.get("6");
+        Lservo      = hardwareMap.servo.get("s2");
+        Rservo      = hardwareMap.servo.get("s1");
+        telemetry   = _telemetry; //No idea what this does, ask suitbots?
+
+        OptionMenu.Builder builder = new OptionMenu.Builder(hardwareMap.appContext);
+        SingleSelectCategory alliance = new SingleSelectCategory("alliance");
+        alliance.addOption("Red");
+        alliance.addOption("Blue");
+        builder.addCategory(alliance);
+        allianceMenu = builder.create();
     }
     //Let's have some fun(ctions) -ta
 
@@ -58,7 +72,6 @@ public class RobotSetup {
 
     //lDistance and rDistance will now return distance
     //    from the point where this function is run.
-    // TODO ALL OF THIS IS UNTESTED
     public void resetEncoders(){
         leftEncoderDistance  = frontLeft.getCurrentPosition();
         rightEncoderDistance = frontRight.getCurrentPosition();
@@ -70,15 +83,15 @@ public class RobotSetup {
         return rightEncoderDistance - frontRight.getCurrentPosition();
     }
 
-    public void encoderMove(int ticks, double power){//TODO Not tested going backwards.
-        resetEncoders();
-        move(power,power);
+    public void encoderMove(int ticks, double power){//tested
+        resetEncoders();        //set encoders to 0.
+        move(power,power);      //start moving BEFORE while loop. see gTurn().
         while (Math.abs(lDistance()) < Math.abs(ticks)
             || Math.abs(rDistance()) < Math.abs(ticks)){
             telemetry.addData("Status","Driving");
         }
         move(0,0);
-        telemetry.addData("Status","Stopped");
+        telemetry.addData("Status", "Stopped");
     }
 
     //--------------------------------LIGHT FUNCTIONS
@@ -86,27 +99,49 @@ public class RobotSetup {
     public void redLED  (boolean state){cdim.setLED(1, state);} //tested
 
     //--------------------------------GYRO FUNCTIONS
-    public int heading(){
+    public int heading(){//just shorthand for our Integrated Z value.
         return G.getIntegratedZValue();
     }
-    public void gTurn(int degrees, double power){ //TODO test turning left (negative values)
-        G.resetZAxisIntegrator();
-        float direction = Math.signum(degrees);
-        move(-direction * power, direction * power);
-        while (Math.abs(heading()) <Math.abs(degrees)){
-            telemetry.addData("Status","Turning");
+    public void gTurn(int degrees, double power){ //tested
+        G.resetZAxisIntegrator();               //Reset Gyro
+        float direction = Math.signum(degrees); //get +/- sign of target
+
+        move(  -direction * power,              //move in the right direction
+                direction * power);             //we start moving BEFORE the while loop.
+
+        while ( Math.abs(heading()) <           //if we move IN the while loop, the app crashes.
+                Math.abs(degrees)){             //we need to have something inside the loop.
+            telemetry.addData("Status","Turning");//do some BS telemetry to avoid a blank loop.
         }
-        move(0,0);
+        move(0, 0);
         resetEncoders();
     }
     //--------------------------------TELEMETRY FUNCTIONS
-    public void defaultTelemetry(){ //BE SURE TO INCLUDE THIS IN EVERY loop()!
-        telemetry.addData("Gyro",      heading());
-        telemetry.addData("reversed",  isreversed());
+    public void defaultTelemetry(){
+        telemetry.addData("Gyro", heading());
+        telemetry.addData("reversed", isreversed());
         telemetry.addData("Encoder L", lDistance());
         telemetry.addData("Encoder R", rDistance());
     }
     //--------------------------------MISC FUNCTIONS
+    public String getAlliance(){
+        return (allianceMenu.selectedOption("alliance"));
+    }
+    public boolean isRed(){
+        return (allianceMenu.selectedOption("alliance").equals("red"));
+    }
+    public boolean isBlue(){
+        return (allianceMenu.selectedOption("alliance").equals("blue"));
+    }
+
+    public void startRobot() {
+        blueLED(false);
+        redLED(false);
+        move(0, 0);
+        moveTape(0);
+        moveWinch(0);
+        resetEncoders();
+    }
     public void end(){
         //most of this probably isn't necessary, but I'm doing it anyway.
         blueLED(false);
@@ -115,14 +150,6 @@ public class RobotSetup {
         move(0, 0);
         moveTape(0);
         moveWinch(0);
-    }
-    public void startRobot() {
-        blueLED(false);
-        redLED(false);
-        move(0, 0);
-        moveTape(0);
-        moveWinch(0);
-        resetEncoders();
     }
     /*
      public double accel(double input, double target){ //TODO NOT TESTED AT ALL

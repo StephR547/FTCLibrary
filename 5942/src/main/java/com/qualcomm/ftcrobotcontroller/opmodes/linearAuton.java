@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.lasarobotics.library.options.OptionMenu;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
@@ -18,8 +19,10 @@ public class linearAuton extends LinearOpMode{
         bot.redLED(false);
 
         bot.encoderMove(1600, 0.3);
-        sleep(50);
-        bot.encoderMove(1600, -0.3);
+        sleep(100);
+        bot.gTurn(-90, 0.1);
+        sleep(250);
+        telemetry.addData("Gyro",bot.heading());
         bot.end();
 
     }
