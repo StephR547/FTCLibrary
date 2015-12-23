@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class Auton extends OpMode{
     public long startTime;
     public long currentTime;
-    RobotSetup bot;
+    RobotSetup jarjarbling;
     @Override public void init(){
-        bot = new RobotSetup(hardwareMap,telemetry);
-        bot.gyroInit();
+        jarjarbling = new RobotSetup(hardwareMap,telemetry);
+        jarjarbling.gyroInit();
     }
     @Override public void start() {
         startTime = System.currentTimeMillis();
@@ -18,7 +18,7 @@ public class Auton extends OpMode{
 
     }
     @Override public void stop() {
-        bot.end();
+        jarjarbling.end();
     }
 }
 

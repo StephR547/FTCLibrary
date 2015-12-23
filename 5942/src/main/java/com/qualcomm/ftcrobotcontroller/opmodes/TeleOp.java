@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
     import com.lasarobotics.library.controller.ButtonState;
     import com.lasarobotics.library.controller.Controller;
     import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+/**/
 
 public class TeleOp extends OpMode {
 
@@ -21,7 +22,6 @@ public class TeleOp extends OpMode {
         one.update(gamepad1);
         two.update(gamepad2);
 
-
         //--------------------------------ARM
         //Controls tape with left bumpers. If bumpers are not pressed, use the joystick value.
         if      (two.left_trigger == 1) jarjarbling.moveTape(0.2);
@@ -31,7 +31,7 @@ public class TeleOp extends OpMode {
         //controls winch with right buttons. we don't use a joystick here.
         if      (two.right_trigger == 1) jarjarbling.moveWinch(1);
         else if (two.right_bumper == ButtonState.HELD) jarjarbling.moveWinch(-1);
-        else    jarjarbling.moveWinch(0);;
+        else    jarjarbling.moveWinch(0);
 
         //--------------------------------SERVOS
         //left  down = 1.
@@ -47,7 +47,7 @@ public class TeleOp extends OpMode {
         jarjarbling.redLED(jarjarbling.isreversed());
 
         if (jarjarbling.isreversed()) { //assigns left  to right and flips directions.
-            jarjarbling.move(-one.right_stick_y, -one.left_stick_y);  //TODO CHECK THIS '-' SIGN
+            jarjarbling.move(-one.right_stick_y, -one.left_stick_y);
         } else {
             jarjarbling.move (one.left_stick_y, one.right_stick_y);
         }
