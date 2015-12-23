@@ -44,8 +44,10 @@ public class RobotSetup {
         Rservo      = hardwareMap.servo.get("s1");
         telemetry   = _telemetry; //No idea what this does, ask suitbots?
 
-        OptionMenu.Builder builder = new OptionMenu.Builder(hardwareMap.appContext);
-        SingleSelectCategory alliance = new SingleSelectCategory("alliance");
+        OptionMenu.Builder builder = new
+                OptionMenu.Builder(hardwareMap.appContext);
+        SingleSelectCategory alliance =
+                new SingleSelectCategory("alliance");
         alliance.addOption("Red");
         alliance.addOption("Blue");
         builder.addCategory(alliance);
@@ -63,10 +65,10 @@ public class RobotSetup {
     //Set Arm Motor Positions with these.
     //left  servo down position = 1
     //right servo down position = 0
-    public void servoL      (double position) {Lservo.setPosition(position);}
-    public void servoR      (double position) {Rservo.setPosition(position);}
-    public void moveTape    (double power)    {arm2.setPower(power);}
-    public void moveWinch   (double power)    {arm1.setPower(power);}
+    public void servoL     (double position) {Lservo.setPosition(position);}
+    public void servoR     (double position) {Rservo.setPosition(position);}
+    public void moveTape   (double power)    {arm2.setPower(power);}
+    public void moveWinch  (double power)    {arm1.setPower(power);}
 
     //lDistance and rDistance will now return distance
     //    from the point where this function is run.
@@ -82,8 +84,8 @@ public class RobotSetup {
     }
 
     public void encoderMove(int ticks, double power){//tested
-        resetEncoders();        //set encoders to 0.
-        move(power,power);      //start moving BEFORE while loop. see gTurn().
+        resetEncoders();   //set encoders to 0.
+        move(power,power); //start moving BEFORE while loop. see gTurn().
         while (Math.abs(lDistance()) < Math.abs(ticks)
             || Math.abs(rDistance()) < Math.abs(ticks)){
             telemetry.addData("Status","Driving");
@@ -104,12 +106,15 @@ public class RobotSetup {
         G.resetZAxisIntegrator();               //Reset Gyro
         float direction = Math.signum(degrees); //get +/- sign of target
 
-        move(-direction * power,              //move in the right direction
-                direction * power);             //we start moving BEFORE the while loop.
-
-        while ( Math.abs(heading()) <           //if we move IN the while loop, the app crashes.
-                Math.abs(degrees)){             //we need to have something inside the loop.
-            telemetry.addData("Status","Turning");//do some BS telemetry to avoid a blank loop.
+        move(-direction * power, direction * power);
+        //move in the right direction
+        //we start moving BEFORE the while loop.
+        while ( Math.abs(heading()) < Math.abs(degrees)){
+                //if we move IN the while loop, the app crashes.
+                // we need to have something inside the loop.
+                //possibly needs waitOnHardwareCycle() implemented somehow.
+            telemetry.addData("Status","Turning");
+            //do some BS telemetry to avoid a blank loop.
         }
         move(0, 0);
         resetEncoders();
@@ -132,10 +137,10 @@ public class RobotSetup {
         return allianceMenu.selectedOption("alliance");
     }
     public boolean isRed(){
-        return (getAlliance().equals("red"));
+        return (getAlliance().equals("Red"));
     }
     public boolean isBlue(){
-        return (getAlliance().equals("blue"));
+        return (getAlliance().equals("Blue"));
     }
 
     public void startRobot() {
@@ -147,7 +152,8 @@ public class RobotSetup {
         resetEncoders();
     }
     public void end(){
-        //most of this probably isn't necessary, but I'm doing it anyway.
+        //most of this probably isn't necessary,
+        // but I'm doing it anyway.
         blueLED(false);
         redLED(false);
         resetEncoders();
@@ -155,17 +161,4 @@ public class RobotSetup {
         moveTape(0);
         moveWinch(0);
     }
-    /*
-     public double accel(double input, double target){ //TODO NOT TESTED AT ALL
-        if ( Math.abs(target) < Math.abs(input)){
-                target += 0.05 * (int)Math.signum(target);
-        }
-        return target;
-    }
-    hopefully 'softens' the joystick output to prevent motors from breaking.
-    * should probably only go in a loop() function.
-    * should look like:
-    * double output = 0;
-    * output = bot.accel(one.joystick_left_y, output)
-    * */
 }
