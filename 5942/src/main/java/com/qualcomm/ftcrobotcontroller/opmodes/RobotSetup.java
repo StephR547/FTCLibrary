@@ -7,7 +7,6 @@ import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robocol.Telemetry;
 
@@ -22,7 +21,6 @@ public class RobotSetup {
     private Servo Lservo, Rservo;
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
-    private LED extLED;
     public OptionMenu allianceMenu;
     //declare Reverse Variable
     boolean reverseVal = false;
@@ -106,7 +104,7 @@ public class RobotSetup {
         G.resetZAxisIntegrator();               //Reset Gyro
         float direction = Math.signum(degrees); //get +/- sign of target
 
-        move(  -direction * power,              //move in the right direction
+        move(-direction * power,              //move in the right direction
                 direction * power);             //we start moving BEFORE the while loop.
 
         while ( Math.abs(heading()) <           //if we move IN the while loop, the app crashes.
@@ -125,13 +123,19 @@ public class RobotSetup {
     }
     //--------------------------------MISC FUNCTIONS
     public String getAlliance(){
-        return (allianceMenu.selectedOption("alliance"));
+        //catch{} prevents app from crashing when alliance is unselected.
+        try {
+            allianceMenu.selectedOption("alliance");
+        } catch (IllegalArgumentException e){
+            return "None";
+        }
+        return allianceMenu.selectedOption("alliance");
     }
     public boolean isRed(){
-        return (allianceMenu.selectedOption("alliance").equals("red"));
+        return (getAlliance().equals("red"));
     }
     public boolean isBlue(){
-        return (allianceMenu.selectedOption("alliance").equals("blue"));
+        return (getAlliance().equals("blue"));
     }
 
     public void startRobot() {

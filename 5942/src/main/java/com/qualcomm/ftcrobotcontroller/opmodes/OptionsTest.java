@@ -10,9 +10,10 @@ public class OptionsTest extends LinearOpMode{
         bot.startRobot();
         bot.G.calibrate();
         bot.allianceMenu.show(); //Necessary to show options menu.
-        waitForStart();
 
-        telemetry.addData("Alliance",bot.getAlliance());
+        waitForStart();
+        String alliance = bot.getAlliance();
+        telemetry.addData("Alliance", alliance);
 
         bot.end();
     }
