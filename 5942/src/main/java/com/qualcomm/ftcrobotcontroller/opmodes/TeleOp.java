@@ -14,7 +14,7 @@ public class TeleOp extends OpMode {
 
     @Override public void init(){
         jarjarbling = new RobotSetup(hardwareMap, telemetry);
-        jarjarbling.gyroInit();//TODO light doesnt seem to work. needs more testing.
+        jarjarbling.startRobot(); //TODO light doesnt seem to work. needs more testing.
 
     }
     @Override public void loop() {
@@ -51,6 +51,9 @@ public class TeleOp extends OpMode {
         } else {
             jarjarbling.move (one.left_stick_y, one.right_stick_y);
         }
+
+        if (one.y == ButtonState.RELEASED) jarjarbling.resetEncoders();
+
         jarjarbling.defaultTelemetry();
     }
     public void stop(){

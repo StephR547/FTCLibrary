@@ -23,7 +23,6 @@ public class RobotSetup {
     //declare motor control variables
     private int leftEncoderDistance;
     private int rightEncoderDistance;
-    double heading;
     private Telemetry telemetry;
 
     RobotSetup(HardwareMap hardwareMap, Telemetry _telemetry) {
@@ -44,11 +43,10 @@ public class RobotSetup {
 
     //--------------------------------MOVEMENT FUNCTIONS
     public void move(double l, double r) {
-            Tank.motor4(frontLeft, frontRight, backLeft, backRight, -l, r);}  //tested
+            Tank.motor4(frontLeft, frontRight, backLeft, backRight, l, -r);}  //tested
 
     public void    reverse()   {reverseVal = !reverseVal;}  //tested
     public boolean isreversed(){return reverseVal;}  //tested
-
 
     //Set Arm Motor Positions with these.
     //left  servo down position = 1
@@ -62,56 +60,78 @@ public class RobotSetup {
     //    from the point where this function is run.
     // TODO ALL OF THIS IS UNTESTED
     public void resetEncoders(){
-        leftEncoderDistance  = backLeft.getCurrentPosition();
-        rightEncoderDistance = backRight.getCurrentPosition();
+        leftEncoderDistance  = frontLeft.getCurrentPosition();
+        rightEncoderDistance = frontRight.getCurrentPosition();
     }
     public int lDistance (){
-        return backLeft.getCurrentPosition() - leftEncoderDistance;
+        return frontLeft.getCurrentPosition() - leftEncoderDistance;
     }
     public int rDistance(){
-        return backRight.getCurrentPosition() - rightEncoderDistance;
+        return rightEncoderDistance - frontRight.getCurrentPosition();
     }
 
+    public void encoderMove(int ticks, double power){//TODO Not tested going backwards.
+        resetEncoders();
+        move(power,power);
+        while (Math.abs(lDistance()) < Math.abs(ticks)
+            || Math.abs(rDistance()) < Math.abs(ticks)){
+            telemetry.addData("Status","Driving");
+        }
+        move(0,0);
+        telemetry.addData("Status","Stopped");
+    }
 
     //--------------------------------LIGHT FUNCTIONS
     public void blueLED (boolean state){cdim.setLED(0, state);} //tested
     public void redLED  (boolean state){cdim.setLED(1, state);} //tested
 
     //--------------------------------GYRO FUNCTIONS
-    public void gyroInit(){
-        G.calibrate();
-        while (G.isCalibrating()){
-            telemetry.addData("Gyro","Calibrating");
-            blueLED(true);
+    public int heading(){
+        return G.getIntegratedZValue();
+    }
+    public void gTurn(int degrees, double power){ //TODO test turning left (negative values)
+        G.resetZAxisIntegrator();
+        float direction = Math.signum(degrees);
+        move(-direction * power, direction * power);
+        while (Math.abs(heading()) <Math.abs(degrees)){
+            telemetry.addData("Status","Turning");
         }
-        blueLED(false);
-        telemetry.addData("Gyro", "Calibrated");
-
+        move(0,0);
+        resetEncoders();
     }
     //--------------------------------TELEMETRY FUNCTIONS
     public void defaultTelemetry(){ //BE SURE TO INCLUDE THIS IN EVERY loop()!
-        heading = G.getIntegratedZValue();
-        telemetry.addData("Gyro",       heading);
-        telemetry.addData("reversed",   isreversed());
-        telemetry.addData("Encoder L",  lDistance());
-        telemetry.addData("Encoder R",  rDistance());
+        telemetry.addData("Gyro",      heading());
+        telemetry.addData("reversed",  isreversed());
+        telemetry.addData("Encoder L", lDistance());
+        telemetry.addData("Encoder R", rDistance());
     }
+    //--------------------------------MISC FUNCTIONS
     public void end(){
+        //most of this probably isn't necessary, but I'm doing it anyway.
+        blueLED(false);
+        redLED(false);
+        resetEncoders();
+        move(0, 0);
+        moveTape(0);
+        moveWinch(0);
+    }
+    public void startRobot() {
         blueLED(false);
         redLED(false);
         move(0, 0);
         moveTape(0);
         moveWinch(0);
+        resetEncoders();
     }
-    //--------------------------------MISC FUNCTIONS
-    public double accel(double input, double target){ //TODO NOT TESTED AT ALL
+    /*
+     public double accel(double input, double target){ //TODO NOT TESTED AT ALL
         if ( Math.abs(target) < Math.abs(input)){
                 target += 0.05 * (int)Math.signum(target);
         }
         return target;
     }
-
-    /*hopefully 'softens' the joystick output to prevent motors from breaking.
+    hopefully 'softens' the joystick output to prevent motors from breaking.
     * should probably only go in a loop() function.
     * should look like:
     * double output = 0;

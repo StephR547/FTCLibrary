@@ -8,7 +8,6 @@ public class Auton extends OpMode{
     RobotSetup jarjarbling;
     @Override public void init(){
         jarjarbling = new RobotSetup(hardwareMap,telemetry);
-        jarjarbling.gyroInit();
     }
     @Override public void start() {
         startTime = System.currentTimeMillis();

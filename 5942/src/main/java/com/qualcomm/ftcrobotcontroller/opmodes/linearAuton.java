@@ -9,17 +9,25 @@ public class linearAuton extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         RobotSetup bot = new RobotSetup(hardwareMap,telemetry);
-        bot.redLED(false);
-        bot.blueLED(false);
+        bot.redLED(true);
+        bot.startRobot();
+        bot.G.calibrate();
+
+        //--------------------------------OPMODE START
         waitForStart();
-        while (opModeIsActive()){
-            bot.redLED(true);
-            bot.blueLED(false);
-            Thread.sleep(100);
-            bot.redLED(false);
-            bot.blueLED(true);
-            Thread.sleep(100);
-        }
+        bot.redLED(false);
+
+        bot.encoderMove(1600, 0.3);
+        sleep(50);
+        bot.encoderMove(1600, -0.3);
         bot.end();
+
     }
 }
+/*
+* warning: dont do:
+* while encodervalue < target{
+*   bot.move(x,y)
+* }
+* sending move() data every loop seems to crash the app. oops.
+* */
