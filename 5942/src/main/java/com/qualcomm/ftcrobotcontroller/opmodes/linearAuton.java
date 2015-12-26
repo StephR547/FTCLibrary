@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.lasarobotics.library.options.OptionMenu;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class linearAuton extends LinearOpMode{
@@ -19,6 +18,9 @@ public class linearAuton extends LinearOpMode{
         telemetry.addData("Alliance", alliance);
         //--------------------------------OPMODE START
         waitForStart();
+        if (bot.getAlliance().equals("None")){
+            //what to run when no alliance is chosen from the menu
+        }
 
     }
 }
