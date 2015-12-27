@@ -3,10 +3,15 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.lasarobotics.library.drive.Tank;
 import com.lasarobotics.library.options.OptionMenu;
 import com.lasarobotics.library.options.SingleSelectCategory;
+import com.lasarobotics.library.util.Timers;
 import com.qualcomm.hardware.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robocol.Telemetry;
 
@@ -22,6 +27,8 @@ public class RobotSetup {
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
     public OptionMenu allianceMenu;
+    public LED EchoOut;
+    public DigitalChannel EchoIn;
     //declare Reverse Variable
     boolean reverseVal = false;
 
@@ -33,7 +40,8 @@ public class RobotSetup {
     RobotSetup(HardwareMap hardwareMap, Telemetry _telemetry) {
         G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         cdim        = hardwareMap.deviceInterfaceModule.get("dim");
-        //extLED      = hardwareMap.led.get("LED");
+        EchoOut     = hardwareMap.led.get("trigger");
+        EchoIn      = hardwareMap.digitalChannel.get("echo");
         frontLeft   = hardwareMap.dcMotor.get("4");
         frontRight  = hardwareMap.dcMotor.get("2");
         backLeft    = hardwareMap.dcMotor.get("3");
@@ -65,8 +73,8 @@ public class RobotSetup {
     //Set Arm Motor Positions with these.
     //left  servo down position = 1
     //right servo down position = 0
-    public void servoL     (double position) {Lservo.setPosition(position);}
-    public void servoR     (double position) {Rservo.setPosition(position);}
+    public void servoL(double position) {Lservo.setPosition(position);}
+    public void servoR(double position) {Rservo.setPosition(position);}
     public void moveTape   (double power)    {arm2.setPower(power);}
     public void moveWinch  (double power)    {arm1.setPower(power);}
 
@@ -90,7 +98,7 @@ public class RobotSetup {
             || Math.abs(rDistance()) < Math.abs(ticks)){
             telemetry.addData("Status","Driving");
         }
-        move(0,0);
+        move(0, 0);
         telemetry.addData("Status", "Stopped");
     }
 
@@ -142,6 +150,9 @@ public class RobotSetup {
     public boolean isBlue(){
         return (getAlliance().equals("Blue"));
     }
+
+
+
 
     public void startRobot() {
         blueLED(false);
