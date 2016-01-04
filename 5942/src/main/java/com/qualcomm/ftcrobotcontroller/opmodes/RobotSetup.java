@@ -27,8 +27,8 @@ public class RobotSetup {
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
     public OptionMenu allianceMenu;
-    public LED EchoOut;
-    public DigitalChannel EchoIn;
+    private AnalogInput IRsensor;
+    private DigitalChannel bumper;
     //declare Reverse Variable
     boolean reverseVal = false;
 
@@ -40,8 +40,8 @@ public class RobotSetup {
     RobotSetup(HardwareMap hardwareMap, Telemetry _telemetry) {
         G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         cdim        = hardwareMap.deviceInterfaceModule.get("dim");
-        EchoOut     = hardwareMap.led.get("trigger");
-        EchoIn      = hardwareMap.digitalChannel.get("echo");
+        IRsensor    =hardwareMap.analogInput.get("IR");
+        bumper      = hardwareMap.digitalChannel.get("bumper");
         frontLeft   = hardwareMap.dcMotor.get("4");
         frontRight  = hardwareMap.dcMotor.get("2");
         backLeft    = hardwareMap.dcMotor.get("3");
@@ -65,7 +65,9 @@ public class RobotSetup {
 
     //--------------------------------MOVEMENT FUNCTIONS
     public void move(double l, double r) {
-            Tank.motor4(frontLeft, frontRight, backLeft, backRight, l, -r);}  //tested
+            Tank.motor4(frontLeft, frontRight, backLeft, backRight, -l, r);
+    }  //tested
+
 
     public void    reverse()   {reverseVal = !reverseVal;}  //tested
     public boolean isreversed(){return reverseVal;}  //tested
@@ -106,7 +108,7 @@ public class RobotSetup {
     public void blueLED (boolean state){cdim.setLED(0, state);} //tested
     public void redLED  (boolean state){cdim.setLED(1, state);} //tested
 
-    //--------------------------------GYRO FUNCTIONS
+    //--------------------------------SENSOR FUNCTIONS
     public int heading(){//just shorthand for our Integrated Z value.
         return G.getIntegratedZValue();
     }
@@ -126,6 +128,14 @@ public class RobotSetup {
         }
         move(0, 0);
         resetEncoders();
+    }
+
+    public boolean bumper(){
+        return bumper.getState();
+    }
+
+    public int IRdist(){
+        return IRsensor.getValue();
     }
     //--------------------------------TELEMETRY FUNCTIONS
     public void defaultTelemetry(){
@@ -161,6 +171,7 @@ public class RobotSetup {
         moveTape(0);
         moveWinch(0);
         resetEncoders();
+        reverseVal = false;
     }
     public void end(){
         //most of this probably isn't necessary,

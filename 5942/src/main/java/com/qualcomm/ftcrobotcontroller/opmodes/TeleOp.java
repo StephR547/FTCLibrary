@@ -54,6 +54,11 @@ public class TeleOp extends OpMode {
 
         if (one.y == ButtonState.RELEASED) jarjarbling.resetEncoders();
 
+
+        jarjarbling.blueLED(jarjarbling.bumper());
+
+
+        telemetry.addData("bumper",jarjarbling.bumper());
         jarjarbling.defaultTelemetry();
     }
     public void stop(){

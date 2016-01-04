@@ -23,16 +23,18 @@ public class linearAuton extends LinearOpMode{
         telemetry.addData("Alliance", alliance);
         //--------------------------------OPMODE START
         waitForStart();
-
-        bot.EchoOut.enable(true);
-        wait(1000);
-        bot.EchoOut.enable(false);
-
-        timer.startClock("EchoTimer");
-        while (!bot.EchoIn.getState()){
-            telemetry.addData("Time", timer.getClockValue("EchoTimer"));
+        //TODO fix the button shittiness
+        while (bot.bumper() == false){
+            bot.move(-1, -1);
+            waitOneFullHardwareCycle();
+            if (bot.IRdist()<=20) {
+                bot.move(0, 0);
+                //TODO color sensor code will run here
+            }else{
+                bot.move(-1,-1);
+            }
         }
-        timer.pauseClock("EchoTimer");
-        telemetry.addData("Final Time", timer.getClockValue("EchoTimer"));
+
     }
 }
+
