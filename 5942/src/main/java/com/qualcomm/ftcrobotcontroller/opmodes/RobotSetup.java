@@ -22,7 +22,7 @@ public class RobotSetup {
     //Gyro is public because sometimes I call bot.G.calibrate().
     //Could be made private once we have functions for every gyro use.
     //similarly, menu is public because we call bot.menu.show()
-    private DcMotor frontLeft, frontRight, backLeft, backRight, arm1, arm2;
+    private DcMotor frontLeft, frontRight, backLeft, backRight, midLeft, midRight, arm1, arm2;
     private Servo Lservo, Rservo;
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
@@ -38,59 +38,92 @@ public class RobotSetup {
     private Telemetry telemetry;
 
     RobotSetup(HardwareMap hardwareMap, Telemetry _telemetry) {
-        G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
-        cdim        = hardwareMap.deviceInterfaceModule.get("dim");
-        IRsensor    =hardwareMap.analogInput.get("IR");
-        bumper      = hardwareMap.digitalChannel.get("bumper");
-        frontLeft   = hardwareMap.dcMotor.get("4");
-        frontRight  = hardwareMap.dcMotor.get("2");
-        backLeft    = hardwareMap.dcMotor.get("3");
-        backRight   = hardwareMap.dcMotor.get("1");
-        arm1        = hardwareMap.dcMotor.get("5");
-        arm2        = hardwareMap.dcMotor.get("6");
-        Lservo      = hardwareMap.servo.get("s2");
-        Rservo      = hardwareMap.servo.get("s1");
         telemetry   = _telemetry; //No idea what this does, ask suitbots?
 
-        OptionMenu.Builder builder = new
-                OptionMenu.Builder(hardwareMap.appContext);
-        SingleSelectCategory alliance =
-                new SingleSelectCategory("alliance");
+
+        //Core Device Interface Module
+        G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        cdim        = hardwareMap.deviceInterfaceModule.get("dim");
+        IRsensor    = hardwareMap.analogInput.get("IR");
+        bumper      = hardwareMap.digitalChannel.get("bumper");
+
+        //Front Left Controller
+        frontLeft   = hardwareMap.dcMotor.get("1");
+        arm1        = hardwareMap.dcMotor.get("2");
+
+        //Front Right Controller
+        frontRight  = hardwareMap.dcMotor.get("3");
+        arm2        = hardwareMap.dcMotor.get("4");
+
+        //back Left Controller
+        midLeft     = hardwareMap.dcMotor.get("5");
+        backLeft    = hardwareMap.dcMotor.get("6");
+
+        //Back Right Controller
+        midRight    = hardwareMap.dcMotor.get("7");
+        backRight   = hardwareMap.dcMotor.get("8");
+
+        //Servo Controller
+        Lservo      = hardwareMap.servo.get("s2");
+        Rservo      = hardwareMap.servo.get("s1");
+
+        /* really unnecessary diagram of our robot in ASCII
+
+         A1---FLC   FRC---A2
+         FL---^       ^---FR
+                 PDM
+         ML--v  SERVO  v--MR
+         BL-->BLC   BRC<--BR
+
+         */
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        midRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+
+        //Our Alliance Selection Menu Setup
+        OptionMenu.Builder builder    = new OptionMenu.Builder(hardwareMap.appContext);
+        SingleSelectCategory alliance = new SingleSelectCategory("alliance");
+
         alliance.addOption("Red");
         alliance.addOption("Blue");
+
         builder.addCategory(alliance);
         allianceMenu = builder.create();
     }
+
+
     //Let's have some fun(ctions) -ta
 
     //--------------------------------MOVEMENT FUNCTIONS
     public void move(double l, double r) {
-            Tank.motor4(frontLeft, frontRight, backLeft, backRight, l, -r);
+            Tank.motor6(frontLeft, frontRight, midLeft, midRight, backLeft, backRight, l, r);
     }  //tested
 
 
     public void    reverse()   {reverseVal = !reverseVal;}  //tested
     public boolean isreversed(){return reverseVal;}  //tested
 
-    //Set Arm Motor Positions with these.
+    //Set Arm Motor Positions with these. TODO Fix so that both down are 0.
     //left  servo down position = 1
     //right servo down position = 0
-    public void servoL(double position) {Lservo.setPosition(position);}
-    public void servoR(double position) {Rservo.setPosition(position);}
-    public void moveTape   (double power)    {arm2.setPower(power);}
-    public void moveWinch  (double power)    {arm1.setPower(power);}
+    public void servoL      (double position) {Lservo.setPosition(position);}
+    public void servoR      (double position) {Rservo.setPosition(position);}
+    public void moveTape    (double power)    {arm2.setPower(power);}
+    public void moveWinch   (double power)    {arm1.setPower(power);}
 
     //lDistance and rDistance will now return distance
     //    from the point where this function is run.
     public void resetEncoders(){
-        leftEncoderDistance  = frontLeft.getCurrentPosition();
-        rightEncoderDistance = frontRight.getCurrentPosition();
+        leftEncoderDistance  = midLeft.getCurrentPosition();
+        rightEncoderDistance = midRight.getCurrentPosition();
     }
     public int lDistance (){
-        return frontLeft.getCurrentPosition() - leftEncoderDistance;
+        return midLeft.getCurrentPosition() - leftEncoderDistance;
     }
     public int rDistance(){
-        return rightEncoderDistance - frontRight.getCurrentPosition();
+        return rightEncoderDistance - midRight.getCurrentPosition();
     }
 
     public void encoderMove(int ticks, double power){//tested
@@ -107,7 +140,7 @@ public class RobotSetup {
     }
 
     //--------------------------------LIGHT FUNCTIONS
-    public void blueLED (boolean state){cdim.setLED(0, state);} //tested
+    public void blueLED(boolean state){cdim.setLED(0, state);} //tested
     public void redLED  (boolean state){cdim.setLED(1, state);} //tested
 
     //--------------------------------SENSOR FUNCTIONS
