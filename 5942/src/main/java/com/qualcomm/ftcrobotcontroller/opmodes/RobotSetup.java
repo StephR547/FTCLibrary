@@ -65,7 +65,7 @@ public class RobotSetup {
 
     //--------------------------------MOVEMENT FUNCTIONS
     public void move(double l, double r) {
-            Tank.motor4(frontLeft, frontRight, backLeft, backRight, -l, r);
+            Tank.motor4(frontLeft, frontRight, backLeft, backRight, l, -r);
     }  //tested
 
 
@@ -97,8 +97,10 @@ public class RobotSetup {
         resetEncoders();   //set encoders to 0.
         move(power,power); //start moving BEFORE while loop. see gTurn().
         while (Math.abs(lDistance()) < Math.abs(ticks)
-            || Math.abs(rDistance()) < Math.abs(ticks)){
+            && Math.abs(rDistance()) < Math.abs(ticks)){
             telemetry.addData("Status","Driving");
+            telemetry.addData("DistanceL",lDistance());
+            telemetry.addData("DistanceR",rDistance());
         }
         move(0, 0);
         telemetry.addData("Status", "Stopped");
