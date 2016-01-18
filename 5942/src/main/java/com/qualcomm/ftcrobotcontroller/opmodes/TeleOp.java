@@ -24,21 +24,21 @@ public class TeleOp extends OpMode {
 
         //--------------------------------ARM
         //Controls tape with left bumpers. If bumpers are not pressed, use the joystick value.
-        if      (two.left_trigger == 1) jarjarbling.moveTape(0.2);
-        else if (two.left_bumper  == ButtonState.HELD) jarjarbling.moveTape(-0.2);
+        if      (two.right_trigger == 1) jarjarbling.moveTape(-0.2);
+        else if (two.right_bumper  == ButtonState.HELD) jarjarbling.moveTape(0.2);
         else    jarjarbling.moveTape(gamepad2.left_stick_y);
 
         //controls winch with right buttons. we don't use a joystick here.
-        if      (two.right_trigger == 1) jarjarbling.moveWinch(1);
-        else if (two.right_bumper == ButtonState.HELD) jarjarbling.moveWinch(-1);
+        if      (two.left_trigger == 1) jarjarbling.moveWinch(1);
+        else if (two.left_bumper == ButtonState.HELD) jarjarbling.moveWinch(-1);
         else    jarjarbling.moveWinch(0);
 
         //--------------------------------SERVOS
         //left  down = 1.
         //right down = 0.
         //servo is pulled down by holding a button, and goes back up when released.
-        if (two.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
-        if (two.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
+        //if (two.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
+        //if (two.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
 
         //--------------------------------DIRECTION
         //This reverses our robot, so what was once our back is now our front.

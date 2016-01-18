@@ -49,6 +49,6 @@ public void register(OpModeManager manager) {
     manager.register("NullOp",      NullOp.class);
     manager.register("Teleop",      TeleOp.class);
     manager.register("linearAuton", linearAuton.class);
-    manager.register("driveForward", driveForward.class);
+    manager.register("autonRampRED", autonRampRED.class);
 
 }}

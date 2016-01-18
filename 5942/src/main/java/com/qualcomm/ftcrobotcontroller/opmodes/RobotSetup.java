@@ -23,7 +23,7 @@ public class RobotSetup {
     //Could be made private once we have functions for every gyro use.
     //similarly, menu is public because we call bot.menu.show()
     private DcMotor frontLeft, frontRight, backLeft, backRight, midLeft, midRight, arm1, arm2;
-    private Servo Lservo, Rservo;
+    //private Servo Lservo, Rservo;
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
     public OptionMenu allianceMenu;
@@ -44,15 +44,14 @@ public class RobotSetup {
         //Core Device Interface Module
         G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         cdim        = hardwareMap.deviceInterfaceModule.get("dim");
-        IRsensor    = hardwareMap.analogInput.get("IR");
         bumper      = hardwareMap.digitalChannel.get("bumper");
 
-        //Front Left Controller
+        //Front Controller
         frontLeft   = hardwareMap.dcMotor.get("1");
-        arm1        = hardwareMap.dcMotor.get("2");
+        frontRight  = hardwareMap.dcMotor.get("2");
 
-        //Front Right Controller
-        frontRight  = hardwareMap.dcMotor.get("3");
+        //Arm Controller
+        arm1        = hardwareMap.dcMotor.get("3");
         arm2        = hardwareMap.dcMotor.get("4");
 
         //back Left Controller
@@ -64,8 +63,8 @@ public class RobotSetup {
         backRight   = hardwareMap.dcMotor.get("8");
 
         //Servo Controller
-        Lservo      = hardwareMap.servo.get("s2");
-        Rservo      = hardwareMap.servo.get("s1");
+        //Lservo      = hardwareMap.servo.get("s2");
+        //Rservo      = hardwareMap.servo.get("s1");
 
         /* really unnecessary diagram of our robot in ASCII
 
@@ -108,8 +107,8 @@ public class RobotSetup {
     //Set Arm Motor Positions with these. TODO Fix so that both down are 0.
     //left  servo down position = 1
     //right servo down position = 0
-    public void servoL      (double position) {Lservo.setPosition(position);}
-    public void servoR      (double position) {Rservo.setPosition(position);}
+    //public void servoL      (double position) {Lservo.setPosition(position);}
+    //public void servoR      (double position) {Rservo.setPosition(position);}
     public void moveTape    (double power)    {arm2.setPower(power);}
     public void moveWinch   (double power)    {arm1.setPower(power);}
 
