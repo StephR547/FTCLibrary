@@ -7,8 +7,6 @@ public class autonRampBLUE extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         RobotSetup bot  = new RobotSetup(hardwareMap,telemetry);
-        Timers timer    = new Timers();
-        timer.createClock("EchoTimer");
 
         bot.startRobot();           //run our initialization function
         bot.G.calibrate();          //calibrate our gyro
