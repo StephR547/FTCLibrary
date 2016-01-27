@@ -77,8 +77,8 @@ public class RobotSetup {
          */
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        midRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        midLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
 
         //Our Alliance Selection Menu Setup
