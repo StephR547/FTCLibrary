@@ -24,16 +24,7 @@ public class linearAuton extends LinearOpMode{
         //--------------------------------OPMODE START
         waitForStart();
         //TODO fix the button shittiness
-        while (bot.bumper() == false){
-            bot.move(-1, -1);
-            waitOneFullHardwareCycle();
-            if (bot.IRdist()<=20) {
-                bot.move(0, 0);
-                //TODO color sensor code will run here
-            }else{
-                bot.move(-1,-1);
-            }
-        }
+
 
     }
 }

@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import android.graphics.Color;
+
 import com.lasarobotics.library.drive.Tank;
 import com.lasarobotics.library.options.OptionMenu;
 import com.lasarobotics.library.options.SingleSelectCategory;
@@ -7,13 +9,16 @@ import com.lasarobotics.library.util.Timers;
 import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LED;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robocol.Telemetry;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 public class RobotSetup {
 
@@ -23,12 +28,12 @@ public class RobotSetup {
     //Could be made private once we have functions for every gyro use.
     //similarly, menu is public because we call bot.menu.show()
     private DcMotor frontLeft, frontRight, backLeft, backRight, midLeft, midRight, arm1, arm2;
-    //private Servo Lservo, Rservo;
+    private Servo Lservo, Rservo, armServo;
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
     public OptionMenu allianceMenu;
-    private AnalogInput IRsensor;
-    private DigitalChannel bumper;
+    public ColorSensor colorSensor;
+    public OpticalDistanceSensor IRsensor;
     //declare Reverse Variable
     boolean reverseVal = false;
 
@@ -44,7 +49,9 @@ public class RobotSetup {
         //Core Device Interface Module
         G = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         cdim        = hardwareMap.deviceInterfaceModule.get("dim");
-        bumper      = hardwareMap.digitalChannel.get("bumper");
+        IRsensor    = hardwareMap.opticalDistanceSensor.get("ir");
+        colorSensor = hardwareMap.colorSensor.get("color");
+
 
         //Front Controller
         frontLeft   = hardwareMap.dcMotor.get("1");
@@ -63,8 +70,10 @@ public class RobotSetup {
         backRight   = hardwareMap.dcMotor.get("8");
 
         //Servo Controller
-        //Lservo      = hardwareMap.servo.get("s2");
-        //Rservo      = hardwareMap.servo.get("s1");
+        Lservo      = hardwareMap.servo.get("s1");
+        Rservo      = hardwareMap.servo.get("s2");
+        armServo    = hardwareMap.servo.get("s3");
+
 
         /* really unnecessary diagram of our robot in ASCII
 
@@ -107,8 +116,9 @@ public class RobotSetup {
     //Set Arm Motor Positions with these. TODO Fix so that both down are 0.
     //left  servo down position = 1
     //right servo down position = 0
-    //public void servoL      (double position) {Lservo.setPosition(position);}
-    //public void servoR      (double position) {Rservo.setPosition(position);}
+    public void servoL      (double position) {Lservo.setPosition(position);}
+    public void servoR      (double position) {Rservo.setPosition(position);}
+    public void arm         (double position) {armServo.setPosition(position);}
     public void moveTape    (double power)    {arm2.setPower(power);}
     public void moveWinch   (double power)    {arm1.setPower(power);}
 
@@ -139,7 +149,7 @@ public class RobotSetup {
     }
 
     //--------------------------------LIGHT FUNCTIONS
-    public void blueLED(boolean state){cdim.setLED(0, state);} //tested
+    public void blueLED (boolean state){cdim.setLED(0, state);} //tested
     public void redLED  (boolean state){cdim.setLED(1, state);} //tested
 
     //--------------------------------SENSOR FUNCTIONS
@@ -164,13 +174,13 @@ public class RobotSetup {
         resetEncoders();
     }
 
-    public boolean bumper(){
-        return bumper.getState();
+    public int color(){
+        float hsvValues[] = {0F,0F,0F};
+        final float values[] = hsvValues;
+        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+        return 0;
     }
 
-    public int IRdist(){
-        return IRsensor.getValue();
-    }
     //--------------------------------TELEMETRY FUNCTIONS
     public void defaultTelemetry(){
         telemetry.addData("Gyro", heading());

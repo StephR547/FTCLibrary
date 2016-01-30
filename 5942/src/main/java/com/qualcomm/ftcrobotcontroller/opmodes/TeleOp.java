@@ -15,6 +15,7 @@ public class TeleOp extends OpMode {
     @Override public void init(){
         jarjarbling = new RobotSetup(hardwareMap, telemetry);
         jarjarbling.startRobot(); //TODO light doesnt seem to work. needs more testing.
+        jarjarbling.colorSensor.enableLed(false);
 
     }
     @Override public void loop() {
@@ -37,8 +38,10 @@ public class TeleOp extends OpMode {
         //left  down = 1.
         //right down = 0.
         //servo is pulled down by holding a button, and goes back up when released.
-        //if (two.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
-        //if (two.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
+        if (two.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
+        if (two.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
+        if (two.y == ButtonState.HELD) jarjarbling.arm(0); else jarjarbling.arm(1);
+
 
         //--------------------------------DIRECTION
         //This reverses our robot, so what was once our back is now our front.
@@ -55,10 +58,6 @@ public class TeleOp extends OpMode {
         if (one.y == ButtonState.RELEASED) jarjarbling.resetEncoders();
 
 
-        jarjarbling.blueLED(jarjarbling.bumper());
-
-
-        telemetry.addData("bumper",jarjarbling.bumper());
         jarjarbling.defaultTelemetry();
     }
     public void stop(){

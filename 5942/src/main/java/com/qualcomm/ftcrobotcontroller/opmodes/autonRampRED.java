@@ -24,6 +24,7 @@ public class autonRampRED extends LinearOpMode{
 
         //TODO do the scroing stuff
 
+
         bot.move(-0.3,-0.3);
         sleep(1000);
         bot.gTurn(45, 0.3);
