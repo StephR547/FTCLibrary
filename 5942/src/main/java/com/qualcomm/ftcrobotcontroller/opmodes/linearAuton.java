@@ -13,6 +13,7 @@ public class linearAuton extends LinearOpMode{
 
         bot.startRobot();           //run our initialization function
         bot.G.calibrate();          //calibrate our gyro
+        /*
         bot.allianceMenu.show();    //shows Red & Blue Menu
         while (bot.getAlliance().equals("None")){
             sleep(50);
@@ -21,8 +22,15 @@ public class linearAuton extends LinearOpMode{
         bot.redLED(bot.isRed());
         bot.blueLED(bot.isBlue());
         telemetry.addData("Alliance", alliance);
+        */
         //--------------------------------OPMODE START
         waitForStart();
+
+        bot.resetEncoders();
+        while (!bot.hasReached(1600,1600)){
+            waitOneFullHardwareCycle();
+            bot.move(0.3,0.3);
+        }
 
 
     }

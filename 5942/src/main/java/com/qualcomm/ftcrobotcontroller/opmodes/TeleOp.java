@@ -13,14 +13,9 @@ public class TeleOp extends OpMode {
     RobotSetup  fetty;
 
     @Override public void init(){
-<<<<<<< HEAD
-        jarjarbling = new RobotSetup(hardwareMap, telemetry);
-        jarjarbling.startRobot(); //TODO light doesnt seem to work. needs more testing.
-        jarjarbling.colorSensor.enableLed(false);
-=======
         fetty = new RobotSetup(hardwareMap, telemetry);
         fetty.startRobot(); //TODO light doesnt seem to work. needs more testing.
->>>>>>> 8dfc88ad2feb13b05ee5f463431cb6d493590f1e
+        fetty.colorSensor.enableLed(false);
 
     }
     @Override public void loop() {
@@ -43,15 +38,19 @@ public class TeleOp extends OpMode {
         //left  down = 1.
         //right down = 0.
         //servo is pulled down by holding a button, and goes back up when released.
-<<<<<<< HEAD
-        if (one.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
-        if (one.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
-        if (one.y == ButtonState.HELD) jarjarbling.arm(0); else jarjarbling.arm(1);
+        if (one.x == ButtonState.HELD) fetty.climberL(1);   else fetty.climberL(0);
+        if (one.b == ButtonState.HELD) fetty.climberR(0);   else fetty.climberR(1);
+        if (one.y == ButtonState.HELD) fetty.dumpArm(0);    else fetty.dumpArm(1);
 
-=======
-        //if (two.x == ButtonState.HELD) fetty.servoL(1); else fetty.servoL(0);
-        //if (two.b == ButtonState.HELD) fetty.servoR(0); else fetty.servoR(1);
->>>>>>> 8dfc88ad2feb13b05ee5f463431cb6d493590f1e
+        if (one.a == ButtonState.HELD) {
+            fetty.allClearR(0);
+            fetty.allClearL(1);
+        }
+        else {
+            fetty.allClearR(1);
+            fetty.allClearL(0);
+        }
+
 
         //--------------------------------DIRECTION
         //This reverses our robot, so what was once our back is now our front.
@@ -67,16 +66,7 @@ public class TeleOp extends OpMode {
 
         if (one.y == ButtonState.RELEASED) fetty.resetEncoders();
 
-
-<<<<<<< HEAD
-        jarjarbling.defaultTelemetry();
-=======
-        fetty.blueLED(fetty.bumper());
-
-
-        telemetry.addData("bumper",fetty.bumper());
         fetty.defaultTelemetry();
->>>>>>> 8dfc88ad2feb13b05ee5f463431cb6d493590f1e
     }
     public void stop(){
         fetty.end();

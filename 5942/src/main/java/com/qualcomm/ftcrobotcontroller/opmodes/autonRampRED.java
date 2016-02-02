@@ -15,30 +15,22 @@ public class autonRampRED extends LinearOpMode{
         waitForStart();
         fetty.move(0.3, 0.3);
         sleep(4000);
-<<<<<<< HEAD
-        bot.gTurn(-45, 0.3);
-        bot.move(0.3, 0.3);
+        fetty.gTurn(-45, 0.3);
+        fetty.move(0.3, 0.3);
         sleep(1000);
-        bot.move(0, 0);
-
+        fetty.move(0, 0);
         //TODO do the scoring stuff
 
 
-        bot.move(-0.3,-0.3);
-        sleep(1000);
-        bot.gTurn(45, 0.3);
-        bot.move(-0.3, -0.3);
-        sleep(2500);
-        bot.gTurn(-85, 0.3);
-        bot.move(-0.3, -0.3);
-        sleep(500);
-        bot.move(1,1);
-=======
         fetty.move(-0.3,-0.3);
-        sleep(1500);
-        fetty.gTurn(-85,0.3);
-        fetty.move(-1,-1);
->>>>>>> 8dfc88ad2feb13b05ee5f463431cb6d493590f1e
+        sleep(1000);
+        fetty.gTurn(45, 0.3);
+        fetty.move(-0.3, -0.3);
+        sleep(2500);
+        fetty.gTurn(-85, 0.3);
+        fetty.move(-0.3, -0.3);
+        sleep(500);
+        fetty.move(1,1);
         sleep(5000);
         fetty.move(0,0);
         //"each their own to"

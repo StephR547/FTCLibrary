@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -28,7 +29,7 @@ public class RobotSetup {
     //Could be made private once we have functions for every gyro use.
     //similarly, menu is public because we call bot.menu.show()
     private DcMotor frontLeft, frontRight, backLeft, backRight, midLeft, midRight, arm1, arm2;
-    private Servo Lservo, Rservo, armServo;
+    private Servo Servo2, Servo1, Servo3, Servo4, Servo5;
     private DeviceInterfaceModule cdim;
     public ModernRoboticsI2cGyro G;
     public OptionMenu allianceMenu;
@@ -57,22 +58,25 @@ public class RobotSetup {
         frontLeft   = hardwareMap.dcMotor.get("1");
         frontRight  = hardwareMap.dcMotor.get("2");
 
-        //
+        //Mid
         midRight    = hardwareMap.dcMotor.get("5");
         midLeft     = hardwareMap.dcMotor.get("6");
 
-        //
+        //Back
         backRight   = hardwareMap.dcMotor.get("7");
         backLeft    = hardwareMap.dcMotor.get("8");
 
-        //
+        //Winch/Tape
         arm1        = hardwareMap.dcMotor.get("3");
         arm2        = hardwareMap.dcMotor.get("4");
 
         //Servo Controller
-        Lservo      = hardwareMap.servo.get("s2");
-        Rservo      = hardwareMap.servo.get("s1");
-        armServo    = hardwareMap.servo.get("s3");
+        Servo1      = hardwareMap.servo.get("s1");
+        Servo2      = hardwareMap.servo.get("s2");
+        Servo3      = hardwareMap.servo.get("s3");
+        Servo4      = hardwareMap.servo.get("s4");
+        Servo5      = hardwareMap.servo.get("s5");
+
 
 
         /* really unnecessary diagram of our robot in ASCII
@@ -116,12 +120,35 @@ public class RobotSetup {
     //Set Arm Motor Positions with these. TODO Fix so that both down are 0.
     //left  servo down position = 1
     //right servo down position = 0
-    public void servoL      (double position) {Lservo.setPosition(position);}
-    public void servoR      (double position) {Rservo.setPosition(position);}
-    public void arm         (double position) {armServo.setPosition(position);}
-    public void moveTape    (double power)    {arm2.setPower(power);}
-    public void moveWinch   (double power)    {arm1.setPower(power);}
 
+
+    public void climberR    (double position) {Servo1.setPosition(position);}
+    public void climberL    (double position) {Servo2.setPosition(position);}
+    public void dumpArm     (double position) {Servo3.setPosition(position);}
+    public void allClearL   (double position) {Servo4.setPosition(position);}
+    public void allClearR   (double position) {Servo5.setPosition(position);}
+
+    public void moveWinch   (double power)    {arm1.setPower(power);}
+    public void moveTape    (double power)    {arm2.setPower(power);}
+
+
+    public int lDistance() {return midLeft.getCurrentPosition() - leftEncoderDistance;}
+    public int rDistance() {return rightEncoderDistance - midRight.getCurrentPosition();}
+
+    public void resetLEncoder(){leftEncoderDistance  = midLeft.getCurrentPosition();}
+    public void resetREncoder(){rightEncoderDistance = midRight.getCurrentPosition();}
+    public void resetEncoders(){
+        resetLEncoder();
+        resetREncoder();
+    }
+    public boolean hasReached(int leftDistance, int rightDistance) {
+        return (lDistance() > leftDistance && rDistance() > rightDistance);
+    }
+
+
+
+
+    /*
     //lDistance and rDistance will now return distance
     //    from the point where this function is run.
     public void resetEncoders(){
@@ -147,7 +174,7 @@ public class RobotSetup {
         move(0, 0);
         telemetry.addData("Status", "Stopped");
     }
-
+    */
     //--------------------------------LIGHT FUNCTIONS
     public void blueLED (boolean state){cdim.setLED(0, state);} //tested
     public void redLED  (boolean state){cdim.setLED(1, state);} //tested
