@@ -53,25 +53,25 @@ public class RobotSetup {
         colorSensor = hardwareMap.colorSensor.get("color");
 
 
-        //Front Controller
+        //Motors
         frontLeft   = hardwareMap.dcMotor.get("1");
         frontRight  = hardwareMap.dcMotor.get("2");
 
-        //Arm Controller
+        //
+        midRight    = hardwareMap.dcMotor.get("5");
+        midLeft     = hardwareMap.dcMotor.get("6");
+
+        //
+        backRight   = hardwareMap.dcMotor.get("7");
+        backLeft    = hardwareMap.dcMotor.get("8");
+
+        //
         arm1        = hardwareMap.dcMotor.get("3");
         arm2        = hardwareMap.dcMotor.get("4");
 
-        //back Left Controller
-        midLeft     = hardwareMap.dcMotor.get("5");
-        backLeft    = hardwareMap.dcMotor.get("6");
-
-        //Back Right Controller
-        midRight    = hardwareMap.dcMotor.get("7");
-        backRight   = hardwareMap.dcMotor.get("8");
-
         //Servo Controller
-        Lservo      = hardwareMap.servo.get("s1");
-        Rservo      = hardwareMap.servo.get("s2");
+        Lservo      = hardwareMap.servo.get("s2");
+        Rservo      = hardwareMap.servo.get("s1");
         armServo    = hardwareMap.servo.get("s3");
 
 

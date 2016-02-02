@@ -22,7 +22,7 @@ public class autonRampRED extends LinearOpMode{
         sleep(1000);
         bot.move(0, 0);
 
-        //TODO do the scroing stuff
+        //TODO do the scoring stuff
 
 
         bot.move(-0.3,-0.3);

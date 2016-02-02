@@ -13,23 +13,27 @@ public class driveForward extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         RobotSetup bot  = new RobotSetup(hardwareMap,telemetry);
         Timers timer    = new Timers();
-        timer.createClock("EchoTimer");
+        timer.createClock("clock");
 
         bot.startRobot();           //run our initialization function
         bot.G.calibrate();          //calibrate our gyro
 
         //--------------------------------OPMODE START
         waitForStart();
+        timer.startClock("clock");
         //bot.move(0.3, 0.3);
         //sleep(1000);
         //bot.move(0, 0);
-        if (bot.colorSensor.blue() > bot.colorSensor.red()) {
-            bot.blueLED(true);
-        }else if (bot.colorSensor.blue() < bot.colorSensor.red()) {
-            bot.redLED(true);
-        }else {
-            bot.blueLED(false);
-            bot.redLED(false);
+
+        while (timer.getClockValue("clock") < 30000) {
+            if (bot.colorSensor.blue() > bot.colorSensor.red()) {
+                bot.blueLED(true);
+            } else if (bot.colorSensor.blue() < bot.colorSensor.red()) {
+                bot.redLED(true);
+            } else {
+                bot.blueLED(false);
+                bot.redLED(false);
+            }
         }
 
         //"each their own to"

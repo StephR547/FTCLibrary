@@ -38,9 +38,9 @@ public class TeleOp extends OpMode {
         //left  down = 1.
         //right down = 0.
         //servo is pulled down by holding a button, and goes back up when released.
-        if (two.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
-        if (two.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
-        if (two.y == ButtonState.HELD) jarjarbling.arm(0); else jarjarbling.arm(1);
+        if (one.x == ButtonState.HELD) jarjarbling.servoL(1); else jarjarbling.servoL(0);
+        if (one.b == ButtonState.HELD) jarjarbling.servoR(0); else jarjarbling.servoR(1);
+        if (one.y == ButtonState.HELD) jarjarbling.arm(0); else jarjarbling.arm(1);
 
 
         //--------------------------------DIRECTION

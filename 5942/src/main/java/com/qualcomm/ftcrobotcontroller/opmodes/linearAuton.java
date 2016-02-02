@@ -23,7 +23,6 @@ public class linearAuton extends LinearOpMode{
         telemetry.addData("Alliance", alliance);
         //--------------------------------OPMODE START
         waitForStart();
-        //TODO fix the button shittiness
 
 
     }
