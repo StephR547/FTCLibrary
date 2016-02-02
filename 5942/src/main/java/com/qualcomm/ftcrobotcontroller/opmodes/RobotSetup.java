@@ -5,21 +5,14 @@ import android.graphics.Color;
 import com.lasarobotics.library.drive.Tank;
 import com.lasarobotics.library.options.OptionMenu;
 import com.lasarobotics.library.options.SingleSelectCategory;
-import com.lasarobotics.library.util.Timers;
 import com.qualcomm.hardware.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robocol.Telemetry;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 public class RobotSetup {
 
