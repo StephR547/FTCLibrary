@@ -38,11 +38,11 @@ public class TeleOp extends OpMode {
         //left  down = 1.
         //right down = 0.
         //servo is pulled down by holding a button, and goes back up when released.
-        if (one.x == ButtonState.HELD) fetty.climberL(1);   else fetty.climberL(0);
-        if (one.b == ButtonState.HELD) fetty.climberR(0);   else fetty.climberR(1);
+        if (one.left_bumper == ButtonState.HELD) fetty.climberL(1);   else fetty.climberL(0);
+        if (one.right_bumper == ButtonState.HELD) fetty.climberR(0);   else fetty.climberR(1);
         if (one.y == ButtonState.HELD) fetty.dumpArm(0);    else fetty.dumpArm(1);
 
-        if (one.a == ButtonState.HELD) {
+        if (one.right_trigger == ButtonState.HELD || one.left_trigger == ButtonState.HELD ) {
             fetty.allClearR(0);
             fetty.allClearL(1);
         }
